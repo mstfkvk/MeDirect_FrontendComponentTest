@@ -39,6 +39,31 @@ namespace MeDirect_FrontendComponentTest.Pages
             PostalCodeText.SendKeys(postalCode);
         }
        
+        public void EnterFirstName(string text)
+        {
+            FirstNameText.SendKeys(text);
+        }
+        public void EnterLastName(string text)
+        {
+            LastNameText.SendKeys(text);
+        }
+        public void EnterPostalCode(string text)
+        {
+            PostalCodeText.SendKeys(text);
+        }
+
+        public string GetFirstNameText()
+        {
+            return GetText(FirstNameText);  
+        }
+        public string GetLastNameText()
+        {
+            return GetText(LastNameText);
+        }
+        public string GetPostalCodeText()
+        {
+            return GetText(PostalCodeText);
+        }
 
     }
 }

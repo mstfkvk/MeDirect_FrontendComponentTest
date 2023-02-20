@@ -20,6 +20,11 @@ namespace MeDirect_FrontendComponentTest.StepDefinitions
         private List<int> countList;
         private List<string> nameList;
         private List<string> afterFilter;
+        private IWebElement webElement;
+        private string beforeImgSrc;
+        private string afterImgSrc;
+        private string beforeImgName;
+        private string afterImgName;
 
         public ShoppingTestStepDefinitions(IWebDriver driver)
         {
@@ -196,18 +201,47 @@ namespace MeDirect_FrontendComponentTest.StepDefinitions
             Assert.AreEqual(message, checkoutStepTwoPage.GetPageTitle());
         }
 
-        [Given(@"user clicks linkedin button")]
-        public void GivenUserClicksLinkedinButton()
+        [Given(@"user clicks (.*) button")]
+        public void GivenUserClicksButton(string social)
         {
-            inventoryPage.ClickLinkedn();
+            if (social == "linkedin")
+            {
+                inventoryPage.ClickLinkedin();
+            }
+            else if (social == "facebook")
+            {
+                inventoryPage.ClickFacebook();
+            }
+            else if (social == "twitter")
+            {
+                inventoryPage.ClickTwitter();
+            }
+            inventoryPage.WaitUntilURL(10);
+
         }
+        [Then(@"user goes (.*) website in a new tab")]
+        public void ThenUserGoesWebsiteInANewTab(string social)
+        {
+            driver.SwitchTo().Window(driver.WindowHandles[1]);
+            if (social == "linkedin")
+            {
+                Assert.That(driver.Url.Contains("linkedin"), $"{driver.Url}");
+            }
+            else if (social == "facebook")
+            {
+                Assert.That(driver.Url.Contains("facebook"), $"{driver.Url}");
+            }
+            else if (social == "twitter")
+            {
+                Assert.That(driver.Url.Contains("twitter"), $"{driver.Url}");
+            }
+        }
+
 
         [Given(@"user selects filter with (.*) and (.*)")]
         public void GivenUserSelectsFilterWithAnd(string type, string value)
         {
-
             inventoryPage.ChooseFilter(type, value);
-
         }
         [Then(@"user should see filtering (.*) and (.*)")]
         public void ThenUserShouldSeeFiltering(string type, string value)
@@ -215,141 +249,176 @@ namespace MeDirect_FrontendComponentTest.StepDefinitions
             if (type == "number")
             {
                 if (value == "hilo")
-                { Assert.AreEqual(inventoryPage.GetAllItemPrice(), inventoryPage.PriceHiLo()); }
+                {
+                    Assert.AreEqual(inventoryPage.GetAllItemPrice(), inventoryPage.PriceHiLo(), $"expected: {inventoryPage.GetAllItemPrice()}, actual:{inventoryPage.PriceHiLo()}");
+                    Console.WriteLine($"expected: {inventoryPage.GetAllItemPrice()}, actual:{inventoryPage.PriceHiLo()}");
+                }
                 else
-                { Assert.AreEqual(inventoryPage.GetAllItemPrice(), inventoryPage.PriceLoHi()); }
+                {
+                    Assert.AreEqual(inventoryPage.GetAllItemPrice(), inventoryPage.PriceLoHi(), $"expected: {inventoryPage.GetAllItemPrice()}, actual:{inventoryPage.PriceLoHi()}");
+                    Console.WriteLine($"expected: {inventoryPage.GetAllItemPrice()}, actual:{inventoryPage.PriceLoHi()}");
+                }
             }
             if (type == "alphabetical")
             {
                 if (value == "za")
-                { Assert.AreEqual(inventoryPage.GetAllItemName(), inventoryPage.NameZA()); }
+                {
+                    Assert.AreEqual(inventoryPage.GetAllItemName(), inventoryPage.NameZA(), $"expected: {inventoryPage.GetAllItemName()}, actual:{inventoryPage.NameZA()}");
+                    Console.WriteLine($"expected: {inventoryPage.GetAllItemName()}, actual:{inventoryPage.NameZA()}");
+                }
                 else
-                { Assert.AreEqual(inventoryPage.GetAllItemName(), inventoryPage.NameAZ()); }
+                {
+                    Assert.AreEqual(inventoryPage.GetAllItemName(), inventoryPage.NameAZ(), $"expected: {inventoryPage.GetAllItemName()}, actual:{inventoryPage.NameAZ()}");
+                    Console.WriteLine($"expected: {inventoryPage.GetAllItemName()}, actual:{inventoryPage.NameAZ()}");
+                }
 
             }
         }
 
 
 
-        [Given(@"user looks randomly one image of item first enterance")]
-        public void GivenUserLooksRandomlyOneImageOfItemFirstEnterance()
+        [Given(@"user looks one image of item first enterance")]
+        public void GivenUserLooksOneImageOfItemFirstEnterance()
         {
-            throw new PendingStepException();
+            beforeImgSrc = inventoryPage.GetImageOneSrcInInventory();
         }
 
         [Given(@"user clicks the image")]
         public void GivenUserClicksTheImage()
         {
-            throw new PendingStepException();
+            inventoryPage.ClickImgOne();
+            afterImgSrc = inventoryItemPage.GetImageSrcInInventoryItem();
         }
 
         [Then(@"images should be different")]
         public void ThenImagesShouldBeDifferent()
         {
-            throw new PendingStepException();
+            Assert.AreNotEqual(beforeImgSrc, afterImgSrc);
         }
 
         [Then(@"user clicks go to products button")]
         public void ThenUserClicksGoToProductsButton()
         {
-            throw new PendingStepException();
+            inventoryItemPage.GoBackToProducts();
         }
 
         [Then(@"user clicks second item name")]
         public void ThenUserClicksSecondItemName()
         {
-            throw new PendingStepException();
+            beforeImgName = inventoryPage.GetImageTwoNameInInventory();
+            inventoryPage.ClickImgTwo();
+            afterImgName = inventoryItemPage.GetImageNameInInventoryItem();
         }
 
         [Then(@"user notices names are different")]
         public void ThenUserNoticesNamesAreDifferent()
         {
-            throw new PendingStepException();
+            Assert.AreNotEqual(beforeImgName, afterImgName);
         }
 
-        [Given(@"user can click only (.*)(.*) to add to cart")]
-        public void GivenUserCanClickOnlyToAddToCart(Decimal p0, int p1)
+        [Given(@"user can click only specific number to add to cart")]
+        public void GivenUserCanClickOnlySpecificNumberToAddToCart()
         {
-            throw new PendingStepException();
+            //1-2-5 item
+            // so only be able to run with 0-1-4 indexes element
+            // added 3 items
+            List<IWebElement> webElements = inventoryPage.GetAllAddToChartButton();
+            foreach (IWebElement webElement in webElements)
+            {
+                webElement.Click();
+            }
         }
 
-        [Given(@"user tries to remove one of (.*)(.*) items")]
-        public void GivenUserTriesToRemoveOneOfItems(Decimal p0, int p1)
+        [Given(@"user tries to remove one of specific number items")]
+        public void GivenUserTriesToRemoveOneOfSpecificNumberItems()
         {
-            throw new PendingStepException();
+            inventoryPage.GetAllRemoveButton()[0].Click();
         }
 
         [Then(@"user can't remove")]
         public void ThenUserCantRemove()
         {
-            throw new PendingStepException();
+            Assert.AreEqual(inventoryPage.GetCountedItemOnCart(), 3);
         }
 
         [Then(@"user removes randomly one product in cart")]
         public void ThenUserRemovesRandomlyOneProductInCart()
         {
-            throw new PendingStepException();
+            cartPage.RemoveItem(cartPage.GenerateRandomNumbers(1, 3)[0]);
         }
 
         [Then(@"user clicks to checkout button")]
         public void ThenUserClicksToCheckoutButton()
         {
-            throw new PendingStepException();
+            cartPage.ClickCheckout();
         }
 
         [When(@"user writes its firstname")]
         public void WhenUserWritesItsFirstname()
         {
-            throw new PendingStepException();
+            checkoutStepOnePage.EnterFirstName("meDirect");
         }
 
         [Then(@"user should see in the firstname textarea")]
         public void ThenUserShouldSeeInTheFirstnameTextarea()
         {
-            throw new PendingStepException();
+            string text = checkoutStepOnePage.GetFirstNameText();
+            Assert.AreEqual(text, "meDirect");
         }
 
         [When(@"user writes its lastname")]
         public void WhenUserWritesItsLastname()
         {
-            throw new PendingStepException();
+            checkoutStepOnePage.EnterLastName("mustafa kavak");
         }
 
         [When(@"user sees the only one letter of the lastname in the firstname textarea")]
         public void WhenUserSeesTheOnlyOneLetterOfTheLastnameInTheFirstnameTextarea()
         {
-            throw new PendingStepException();
+            string textFirstName = checkoutStepOnePage.GetFirstNameText();
+            string textLastName = checkoutStepOnePage.GetLastNameText();
+            Assert.AreEqual(textLastName, "");
+            Assert.AreEqual("" + textFirstName[textFirstName.Length - 1], "k");
         }
 
         [When(@"user clicks continue button")]
         public void WhenUserClicksContinueButton()
         {
-            throw new PendingStepException();
+            checkoutStepOnePage.ClickContinue();
         }
 
-        [Then(@"user can't see any filtering")]
-        public void ThenUserCantSeeAnyFiltering()
+        [Then(@"user can't see any filtering (.*) and (.*)")]
+        public void ThenUserCantSeeAnyFiltering(string type, string value)
         {
-            throw new PendingStepException();
+
+            Assert.IsTrue(inventoryPage.GetImageOneSrcInInventory()
+                .Equals("https://www.saucedemo.com/static/media/sl-404.168b1cce.jpg"));
         }
 
         [When(@"user clicks menu button")]
         public void WhenUserClicksMenuButton()
         {
-            throw new PendingStepException();
+            inventoryPage.ClickMenuButton();
         }
 
         [When(@"user clicks about button")]
         public void WhenUserClicksAboutButton()
         {
-            throw new PendingStepException();
+            inventoryPage.ClickAboutSubMenuButton();
         }
 
         [Then(@"user gets ""([^""]*)"" page not found message")]
-        public void ThenUserGetsPageNotFoundMessage(string p0)
+        public void ThenUserGetsPageNotFoundMessage(string errorCode)
+        {
+            Assert.IsTrue(driver.Url.Contains(errorCode));
+        }
+
+        /*[Then(@"user should get the (.*) on shopping")]
+        public void ThenUserShouldGetTheOnShopping(string errorMessage)
         {
             throw new PendingStepException();
-        }
+        }*/
+
 
     }
 

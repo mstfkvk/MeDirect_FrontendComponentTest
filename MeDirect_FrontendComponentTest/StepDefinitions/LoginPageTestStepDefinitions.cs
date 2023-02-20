@@ -57,7 +57,6 @@ namespace MeDirect_FrontendComponentTest.StepDefinitions
         {
             Assert.AreEqual(errorMessage, loginPage.GetErrorMessage());
         }
-
-
+        
     }
 }

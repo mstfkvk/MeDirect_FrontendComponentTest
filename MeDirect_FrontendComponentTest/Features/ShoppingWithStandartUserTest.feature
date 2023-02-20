@@ -106,4 +106,10 @@ Examples:
 
 @social
 Scenario: user goes to social media
-	Given user clicks linkedin button
+	Given user clicks <social> button
+	Then user goes <social> website in a new tab
+Examples:
+	| social   |
+	| linkedin |
+	| facebook |
+	| twitter  |

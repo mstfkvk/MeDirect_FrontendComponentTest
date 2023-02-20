@@ -79,8 +79,8 @@ namespace MeDirect_FrontendComponentTest.Features
         {
 #line 7
 #line hidden
-#line 9
-    testRunner.When("user logs in inventory page as \"performance_glitch_user\" and \"secret_sauce\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 8
+ testRunner.When("user logs in inventory page as \"standard_user\" and \"secret_sauce\"", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
         }
         
@@ -396,14 +396,23 @@ this.FeatureBackground();
         }
         
         [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("go to social media")]
+        [NUnit.Framework.DescriptionAttribute("user goes to social media")]
         [NUnit.Framework.CategoryAttribute("social")]
-        public void GoToSocialMedia()
+        [NUnit.Framework.TestCaseAttribute("linkedin", null)]
+        [NUnit.Framework.TestCaseAttribute("facebook", null)]
+        [NUnit.Framework.TestCaseAttribute("twitter", null)]
+        public void UserGoesToSocialMedia(string social, string[] exampleTags)
         {
-            string[] tagsOfScenario = new string[] {
+            string[] @__tags = new string[] {
                     "social"};
+            if ((exampleTags != null))
+            {
+                @__tags = System.Linq.Enumerable.ToArray(System.Linq.Enumerable.Concat(@__tags, exampleTags));
+            }
+            string[] tagsOfScenario = @__tags;
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("go to social media", null, tagsOfScenario, argumentsOfScenario, featureTags);
+            argumentsOfScenario.Add("social", social);
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("user goes to social media", null, tagsOfScenario, argumentsOfScenario, featureTags);
 #line 108
 this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -418,7 +427,10 @@ this.ScenarioInitialize(scenarioInfo);
 this.FeatureBackground();
 #line hidden
 #line 109
- testRunner.Given("user clicks linkedin button", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+ testRunner.Given(string.Format("user clicks {0} button", social), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 110
+ testRunner.Then(string.Format("user goes {0} website in a new tab", social), ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
             }
             this.ScenarioCleanup();

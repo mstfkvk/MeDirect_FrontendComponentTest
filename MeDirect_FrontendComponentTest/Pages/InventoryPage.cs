@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MeDirect_FrontendComponentTest.Pages
 {
@@ -25,7 +26,26 @@ namespace MeDirect_FrontendComponentTest.Pages
         private IWebElement FilterSelect => driver.FindElement(By.CssSelector(".product_sort_container"));
         private List<IWebElement> Options => driver.FindElements(By.TagName("option")).ToList();
 
+        private IWebElement ImageOne => driver.FindElement(By.XPath("(//img[@class='inventory_item_img'])[1]"));
+        private IWebElement ImageTwo => driver.FindElement(By.XPath("(//img[@class='inventory_item_img'])[2]"));
 
+        public string GetImageOneSrcInInventory()
+        {
+            return GetImageSrc(ImageOne);
+        }
+        public string GetImageTwoNameInInventory()
+        {
+            return GetImageName(ImageTwo);
+        }
+        public void ClickImgOne()
+        {
+            ImageOne.Click();
+        }
+        public void ClickImgTwo()
+        {
+            ImageTwo.Click();
+        }
+       
         public void AddToChart(int number)
         {
             AddToChartButton[number].Click();

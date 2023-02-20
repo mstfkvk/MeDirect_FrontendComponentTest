@@ -23,6 +23,11 @@ namespace MeDirect_FrontendComponentTest.Hooks
             Console.WriteLine("Running inside tagged hooks in specflow");
         }
 
+        /*
+         * In hooks class, Before every scenario setup is created
+         * worked with chrome driver
+         * then window is maximized and added implicitly wait for finding web element
+         */
         [BeforeScenario(Order = 1)]
         public void FirstBeforeScenario(ScenarioContext scenarioContext)
         {

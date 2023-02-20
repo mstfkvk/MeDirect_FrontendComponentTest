@@ -1,4 +1,5 @@
 ﻿using OpenQA.Selenium;
+using OpenQA.Selenium.Support.Extensions;
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using System;
@@ -6,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MeDirect_FrontendComponentTest.Pages
 {
@@ -73,42 +75,70 @@ namespace MeDirect_FrontendComponentTest.Pages
         {
             return Error.GetAttribute("textContent");
         }
+        /* wait until element is clickable 
+         */
         public IWebElement WaitUntilClickable(IWebElement element, int second)
         {
             WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(second));
             return wait.Until(ExpectedConditions.ElementToBeClickable(element));
         }
-
+        public void WaitUntilURL(int second)
+        {
+            WebDriverWait wait = new WebDriverWait(driver, TimeSpan.FromSeconds(second));
+            wait.Until(ExpectedConditions.UrlContains("www"));
+        }
         public void ClickTwitter()
         {
-            TwitterButton.Click();
+            ScrollDown(TwitterButton);
+            TwitterButton.SendKeys(Keys.Enter);
         }
         public void ClickFacebook()
         {
-            FacebookButton.Click();
+            ScrollDown(FacebookButton);
+            FacebookButton.SendKeys(Keys.Enter);
         }
-        public void ClickLinkedn()
+        public void ClickLinkedin()
         {
-            LinkedinButton.Click();
+            ScrollDown(LinkedinButton);
+            LinkedinButton.SendKeys(Keys.Enter);
+        }
+        public void ClickMenuButton()
+        {
+            MenuButton.Click();
+        }
+        public void ClickAboutSubMenuButton()
+        {
+            AboutSubMenu.Click();
+        }
+        public void ScrollDown(IWebElement element)
+        {
+            ((IJavaScriptExecutor)driver).ExecuteScript("arguments[0].scrollIntoView();", element);
+
         }
 
+        /*
+         * compares two elements, first sort then check them inside the for loop
+         * */
         public bool isIncludeAllItem(List<string> items1, List<string> items2)
         {
             items1.Sort();
             items2.Sort();
-            if (items1.Count!=items2.Count) { return false; }
-            for(int i=0; i < items1.Count; i++)
+            if (items1.Count != items2.Count) { return false; }
+            for (int i = 0; i < items1.Count; i++)
             {
-                if(items1[i] != items2[i])
+                if (items1[i] != items2[i])
                 {
                     return false;
                 }
-                
+
             }
 
             return true;
         }
 
+        /*
+         * This method creates random number list with wanted length and between given data
+         */
         public List<int> GenerateRandomNumbers(int count, int max)
         {
             if (count < 1 || count > max)
@@ -131,6 +161,18 @@ namespace MeDirect_FrontendComponentTest.Pages
 
             return numbers;
         }
+        public string GetImageSrc(IWebElement element)
+        {
+            return element.GetAttribute("src");
+        }
+        public string GetImageName(IWebElement element)
+        {
+            return element.Text;//GetAttribute("textContent");
+        }
 
+        public string GetText(IWebElement element)
+        {
+            return element.GetAttribute("value");
+        }
     }
 }
